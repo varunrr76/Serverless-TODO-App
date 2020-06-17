@@ -4,15 +4,15 @@ import { TodoItem } from '../models/TodoItem'
 import { TodoAccess } from '../datalayer/todoAccess'
 import { CreateTodoRequest } from '../requests/CreateTodoRequest'
 
-// import {get} from '../auth/utils'
+import { parseUserId } from '../auth/utils'
 
 const todoAccess = new TodoAccess()
 
-// add userid
 export async function createTodo(
-  createTodoRequest: CreateTodoRequest
+  createTodoRequest: CreateTodoRequest,
+  token: string
 ): Promise<TodoItem> {
-  const userId = '23'
+  const userId = await parseUserId(token)
   const todoId = uuid.v4()
 
   return await todoAccess.createTodo({

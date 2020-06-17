@@ -21,7 +21,9 @@ export const handler: APIGatewayProxyHandler = async (
 
   logger.info(`create request for ${JSON.stringify(newTodo)} received!!`)
 
-  const newItem = await createTodo(newTodo)
+  const token: string = event.headers.Authorization.split(' ')[1]
+
+  const newItem = await createTodo(newTodo, token)
 
   return {
     statusCode: 201,
