@@ -12,14 +12,14 @@ import { createLogger } from '../../utils/logger'
 
 import { createTodo } from '../../businessLogic/Todo'
 
-const logger = createLogger('logger')
+const logger = createLogger('CreateTodo')
 
 export const handler: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
   const newTodo: CreateTodoRequest = JSON.parse(event.body)
 
-  logger.log('info', `create request for ${JSON.stringify(newTodo)} received!!`)
+  logger.info(`create request for ${JSON.stringify(newTodo)} received!!`)
 
   const newItem = await createTodo(newTodo)
 

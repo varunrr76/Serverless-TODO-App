@@ -26,8 +26,8 @@ provider:
     TODO_TABLE_INDEX: createdAtIndex
 
 functions:
-  # Auth:
-  #   handler: src/lambda/auth/auth0Authorizer.handler
+  Auth:
+    handler: src/lambda/auth/auth0Authorizer.handler
 
   # # TODO: Configure this function
   # GetTodos:
@@ -44,12 +44,13 @@ functions:
       - http:
           method: post
           path: todos
+          authorizer: Auth
           reqValidatorName: RequestBodyValidator
           documentation:
             summary: Create a new todo
             description: Create a new todo
             requestModels:
-              "application/json": TODORequest
+              'application/json': TODORequest
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -93,7 +94,7 @@ resources:
           Ref: ApiGatewayRestApi
 
     TodoDynamoDBTable:
-      Type: "AWS::DynamoDB::Table"
+      Type: 'AWS::DynamoDB::Table'
       Properties:
         AttributeDefinitions:
           - AttributeName: userId
@@ -122,7 +123,7 @@ resources:
     RequestBodyValidator:
       Type: AWS::ApiGateway::RequestValidator
       Properties:
-        Name: "request-body-validator"
+        Name: 'request-body-validator'
         RestApiId:
           Ref: ApiGatewayRestApi
         ValidateRequestBody: true
