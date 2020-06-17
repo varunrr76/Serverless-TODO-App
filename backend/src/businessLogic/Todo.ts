@@ -1,12 +1,12 @@
 import * as uuid from 'uuid'
 
 import { TodoItem } from '../models/TodoItem'
-import { todoAccess } from '../datalayer/todoAccess'
+import { TodoAccess } from '../datalayer/todoAccess'
 import { CreateTodoRequest } from '../requests/CreateTodoRequest'
 
 // import {get} from '../auth/utils'
 
-const todoAccess = new todoAccess()
+const todoAccess = new TodoAccess()
 
 // add userid
 export async function createTodo(
