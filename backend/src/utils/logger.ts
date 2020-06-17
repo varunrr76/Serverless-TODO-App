@@ -9,8 +9,8 @@ export function createLogger(loggerName: string) {
   return winston.createLogger({
     level: 'info',
     format: winston.format.combine(
-      winston.format.json(),
-      winston.format.timestamp()
+      winston.format.timestamp(),
+      winston.format.json()
     ),
     defaultMeta: { name: loggerName },
     transports: [new winston.transports.Console()]

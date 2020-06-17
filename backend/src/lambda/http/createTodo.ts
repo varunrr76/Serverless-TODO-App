@@ -17,7 +17,16 @@ export const handler: APIGatewayProxyHandler = async (
 ): Promise<APIGatewayProxyResult> => {
   const newTodo: CreateTodoRequest = JSON.parse(event.body)
 
-  logger.log('info', `called logger! ${newTodo}`)
+  logger.log('info', `create request for ${JSON.stringify(newTodo)} received!!`)
 
-  return undefined
+  return {
+    statusCode: 201,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true
+    },
+    body: JSON.stringify({
+      newTodo
+    })
+  }
 }
