@@ -33,7 +33,7 @@ export class TodoAccess {
       })
       .promise()
 
-    return
+    return todoItem
   }
 }
 

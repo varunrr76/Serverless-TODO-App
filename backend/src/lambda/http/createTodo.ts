@@ -10,6 +10,8 @@ import { CreateTodoRequest } from '../../requests/CreateTodoRequest'
 
 import { createLogger } from '../../utils/logger'
 
+import { createTodo } from '../../businessLogic/Todo'
+
 const logger = createLogger('logger')
 
 export const handler: APIGatewayProxyHandler = async (
@@ -19,6 +21,8 @@ export const handler: APIGatewayProxyHandler = async (
 
   logger.log('info', `create request for ${JSON.stringify(newTodo)} received!!`)
 
+  const newItem = await createTodo(newTodo)
+
   return {
     statusCode: 201,
     headers: {
@@ -26,7 +30,7 @@ export const handler: APIGatewayProxyHandler = async (
       'Access-Control-Allow-Credentials': true
     },
     body: JSON.stringify({
-      newTodo
+      newItem
     })
   }
 }
