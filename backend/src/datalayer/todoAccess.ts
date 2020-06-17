@@ -9,42 +9,42 @@ import { TodoItem } from '../models/TodoItem'
 export class GroupAccess {
   constructor(
     private readonly docClient: DocumentClient = createDynamoDBClient(),
-    private readonly groupsTable = process.env.GROUPS_TABLE
+    private readonly todoTable = process.env.TODO_TABLE
   ) {}
 
-  async getAllGroups(): Promise<Group[]> {
+  async getAllGroups(): Promise<TodoItem[]> {
     console.log('Getting all groups')
 
     const result = await this.docClient
       .scan({
-        TableName: this.groupsTable
+        TableName: this.todoTable
       })
       .promise()
 
     const items = result.Items
-    return items as Group[]
+    return items as TodoItem[]
   }
 
-  async createGroup(group: Group): Promise<Group> {
+  async createTodo(todoItem: TodoItem): Promise<TodoItem> {
     await this.docClient
       .put({
-        TableName: this.groupsTable,
-        Item: group
+        TableName: this.todoTable,
+        Item: todoItem
       })
       .promise()
 
-    return group
+    return
   }
 }
 
 function createDynamoDBClient() {
   if (process.env.IS_OFFLINE) {
     console.log('Creating a local DynamoDB instance')
-    return new XAWS.DynamoDB.DocumentClient({
+    return new AWS.DynamoDB.DocumentClient({
       region: 'localhost',
       endpoint: 'http://localhost:8000'
     })
   }
 
-  return new XAWS.DynamoDB.DocumentClient()
+  return new AWS.DynamoDB.DocumentClient()
 }
