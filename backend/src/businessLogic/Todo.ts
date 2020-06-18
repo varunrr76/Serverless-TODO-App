@@ -32,3 +32,8 @@ export async function deleteTodo(todoId: string) {
 export async function updateTodo(todoId: string, updatedTodo: TodoUpdate) {
   return await todoAccess.updateTodo(todoId, updatedTodo)
 }
+
+export async function getTodo(token: string) {
+  const userId = await parseUserId(token)
+  return await todoAccess.getTodo(userId)
+}

@@ -14,21 +14,9 @@ const logger = createLogger('TodoAccess')
 export class TodoAccess {
   constructor(
     private readonly docClient: DocumentClient = createDynamoDBClient(),
-    private readonly todoTable = process.env.TODO_TABLE
+    private readonly todoTable = process.env.TODO_TABLE,
+    private readonly todoIndex = process.env.TODO_TABLE_INDEX
   ) {}
-
-  async getAllGroups(): Promise<TodoItem[]> {
-    console.log('Getting all groups')
-
-    const result = await this.docClient
-      .scan({
-        TableName: this.todoTable
-      })
-      .promise()
-
-    const items = result.Items
-    return items as TodoItem[]
-  }
 
   async createTodo(todoItem: TodoItem): Promise<DataAccessResponse> {
     var resp
@@ -39,16 +27,18 @@ export class TodoAccess {
       })
       .promise()
       .then(() => {
+        logger.info('Successfully Created!')
         resp = {
           status: 201,
-          message: 'Successfully Created!',
           results: [todoItem]
         }
       })
       .catch((err) => {
+        logger.error(
+          `Failed to create todo!! Check with DynamoDB connection. \n ${err}`
+        )
         resp = {
           status: 500,
-          message: `Failed to create todo!! Check with DynamoDB connection. \n ${err}`,
           results: []
         }
       })
@@ -58,9 +48,9 @@ export class TodoAccess {
   async deleteTodo(todoId: string): Promise<DataAccessResponse> {
     var resp
     if (await this.todoItemExists(todoId)) {
+      logger.error('todoId Not Present')
       resp = {
         status: 404,
-        message: 'todoId Not Present',
         results: []
       }
     } else {
@@ -73,16 +63,18 @@ export class TodoAccess {
         })
         .promise()
         .then(() => {
+          logger.info('Successfully Deleted!')
           resp = {
             status: 200,
-            message: 'Successfully Deleted!',
             results: [{ todoId: todoId }]
           }
         })
         .catch((err) => {
+          logger.error(
+            `Failed to delete todo!! Check with DynamoDB connection. \n ${err}`
+          )
           resp = {
             status: 500,
-            message: `Failed to delete todo!! Check with DynamoDB connection. \n ${err}`,
             results: []
           }
         })
@@ -96,9 +88,9 @@ export class TodoAccess {
   ): Promise<DataAccessResponse> {
     var resp
     if (await this.todoItemExists(todoId)) {
+      logger.error('todoId Not Present')
       resp = {
         status: 404,
-        message: 'todoId Not Present',
         results: []
       }
     } else {
@@ -122,22 +114,54 @@ export class TodoAccess {
         })
         .promise()
         .then((data) => {
-          logger.info(`Inside the condition 2 and then ${JSON.stringify(data)}`)
+          logger.info(`Successfully updated to ${JSON.stringify(data)}`)
           resp = {
             status: 200,
-            message: 'Successfully Updated!',
             results: [data]
           }
         })
         .catch((err) => {
-          logger.error(`${err}`)
+          logger.error(
+            `Failed to update todo!! Check with DynamoDB connection. \n ${err}`
+          )
           resp = {
             status: 500,
-            message: `Failed to update todo!! Check with DynamoDB connection. \n ${err}`,
             results: []
           }
         })
     }
+    return resp as DataAccessResponse
+  }
+
+  async getTodo(userId: string): Promise<DataAccessResponse> {
+    var resp
+    await this.docClient
+      .query({
+        TableName: this.todoTable,
+        IndexName: this.todoIndex,
+        KeyConditionExpression: 'userId = :userId',
+        ExpressionAttributeValues: {
+          ':userId': userId
+        },
+        ScanIndexForward: false
+      })
+      .promise()
+      .then((data) => {
+        logger.info('Successfully Created!')
+        resp = {
+          status: 201,
+          results: data
+        }
+      })
+      .catch((err) => {
+        logger.error(
+          `Failed to create todo!! Check with DynamoDB connection. \n ${err}`
+        )
+        resp = {
+          status: 500,
+          results: []
+        }
+      })
     return resp as DataAccessResponse
   }
 

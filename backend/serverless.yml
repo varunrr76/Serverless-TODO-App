@@ -65,7 +65,7 @@ functions:
             summary: Create a new todo
             description: Create a new todo
             requestModels:
-              'application/json': CreateTodoRequest
+              "application/json": CreateTodoRequest
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -83,7 +83,7 @@ functions:
             summary: Update a new todo
             description: Update a new todo
             requestModels:
-              'application/json': UpdateTodoRequest
+              "application/json": UpdateTodoRequest
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -117,7 +117,7 @@ resources:
     RequestBodyValidator:
       Type: AWS::ApiGateway::RequestValidator
       Properties:
-        Name: 'request-body-validator'
+        Name: "request-body-validator"
         RestApiId:
           Ref: ApiGatewayRestApi
         ValidateRequestBody: true
@@ -135,7 +135,7 @@ resources:
           Ref: ApiGatewayRestApi
 
     TodoDynamoDBTable:
-      Type: 'AWS::DynamoDB::Table'
+      Type: "AWS::DynamoDB::Table"
       Properties:
         AttributeDefinitions:
           - AttributeName: userId
@@ -143,6 +143,10 @@ resources:
           - AttributeName: todoId
             AttributeType: S
           - AttributeName: createdAt
+            AttributeType: S
+          - AttributeName: dueDate
+            AttributeType: S
+          - AttributeName: name
             AttributeType: S
         KeySchema:
           - AttributeName: todoId
@@ -154,7 +158,7 @@ resources:
             KeySchema:
               - AttributeName: userId
                 KeyType: HASH
-              - AttributeName: createdAt
+              - AttributeName: dueDate
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL
