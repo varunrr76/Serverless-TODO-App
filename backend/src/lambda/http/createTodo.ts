@@ -23,16 +23,14 @@ export const handler: APIGatewayProxyHandler = async (
 
   const token: string = event.headers.Authorization.split(' ')[1]
 
-  const newItem = await createTodo(newTodo, token)
+  const createItemResponse = await createTodo(newTodo, token)
 
   return {
-    statusCode: 201,
+    statusCode: createItemResponse.status,
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Credentials': true
     },
-    body: JSON.stringify({
-      newItem
-    })
+    body: JSON.stringify(createItemResponse.results)
   }
 }
