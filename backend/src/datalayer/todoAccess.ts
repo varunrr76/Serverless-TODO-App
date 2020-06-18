@@ -95,29 +95,34 @@ export class TodoAccess {
     updatedTodo: TodoUpdate
   ): Promise<DataAccessResponse> {
     var resp
-    if (!(await this.todoItemExists(todoId))) {
+    if (await this.todoItemExists(todoId)) {
       resp = {
         status: 404,
         message: 'todoId Not Present',
         results: []
       }
     } else {
+      logger.info(`${JSON.stringify(updatedTodo.name)}`)
       await this.docClient
         .update({
           TableName: this.todoTable,
           Key: {
             todoId: todoId
           },
-          UpdateExpression: 'set name = :n, dueDate=:dD, done=:d',
+          UpdateExpression: 'set #task_name = :n, dueDate = :dD, done = :d',
           ExpressionAttributeValues: {
             ':n': updatedTodo.name,
             ':dD': updatedTodo.dueDate,
             ':d': updatedTodo.done
           },
+          ExpressionAttributeNames: {
+            '#task_name': 'name'
+          },
           ReturnValues: 'UPDATED_NEW'
         })
         .promise()
         .then((data) => {
+          logger.info(`Inside the condition 2 and then ${JSON.stringify(data)}`)
           resp = {
             status: 200,
             message: 'Successfully Updated!',
@@ -125,9 +130,10 @@ export class TodoAccess {
           }
         })
         .catch((err) => {
+          logger.error(`${err}`)
           resp = {
             status: 500,
-            message: `Failed to delete todo!! Check with DynamoDB connection. \n ${err}`,
+            message: `Failed to update todo!! Check with DynamoDB connection. \n ${err}`,
             results: []
           }
         })

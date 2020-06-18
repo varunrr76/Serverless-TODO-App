@@ -20,7 +20,7 @@ export const handler: APIGatewayProxyHandler = async (
   const todoId = event.pathParameters.todoId
   const updatedTodo: UpdateTodoRequest = JSON.parse(event.body)
 
-  logger.info(`create request for ${JSON.stringify(todoId)} received!!`)
+  logger.info(`update request for ${JSON.stringify(todoId)} received!!`)
 
   const updateItemResp = await updateTodo(todoId, updatedTodo)
 
