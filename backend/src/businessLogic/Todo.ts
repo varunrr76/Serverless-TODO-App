@@ -5,6 +5,7 @@ import { CreateTodoRequest } from '../requests/CreateTodoRequest'
 
 import { parseUserId } from '../auth/utils'
 import { DataAccessResponse } from '../models/DataAccessResponse'
+import { TodoUpdate } from '../models/TodoUpdate'
 
 const todoAccess = new TodoAccess()
 
@@ -28,6 +29,6 @@ export async function deleteTodo(todoId: string) {
   return await todoAccess.deleteTodo(todoId)
 }
 
-export async function updateTodo(todoId: string) {
-  return await todoAccess.updateTodo(todoId)
+export async function updateTodo(todoId: string, updatedTodo: TodoUpdate) {
+  return await todoAccess.updateTodo(todoId, updatedTodo)
 }
