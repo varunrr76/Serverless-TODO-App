@@ -17,6 +17,7 @@ export const handler: APIGatewayProxyHandler = async (
   const todoId = event.pathParameters.todoId
   logger.info(`Received request for signed url of : ${todoId}`)
   const url = await getUploadUrl(todoId)
+  logger.info(`Received signed url of ${todoId}: ${url}`)
 
   return {
     statusCode: 200,
@@ -24,6 +25,6 @@ export const handler: APIGatewayProxyHandler = async (
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Credentials': true
     },
-    body: url
+    body: JSON.stringify({ uploadUrl: url })
   }
 }
