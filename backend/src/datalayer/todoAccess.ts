@@ -5,6 +5,7 @@ import { DocumentClient } from 'aws-sdk/clients/dynamodb'
 // const XAWS = AWSXRay.captureAWS(AWS)
 
 import { TodoItem } from '../models/TodoItem'
+import { TodoUpdate } from '../models/TodoUpdate'
 import { createLogger } from '../utils/logger'
 import { DataAccessResponse } from '../models/DataAccessResponse'
 
@@ -76,6 +77,51 @@ export class TodoAccess {
             status: 200,
             message: 'Successfully Deleted!',
             results: [{ todoId: todoId }]
+          }
+        })
+        .catch((err) => {
+          resp = {
+            status: 500,
+            message: `Failed to delete todo!! Check with DynamoDB connection. \n ${err}`,
+            results: []
+          }
+        })
+    }
+    return resp as DataAccessResponse
+  }
+
+  async updateTodo(
+    todoId: string,
+    updatedTodo: TodoUpdate
+  ): Promise<DataAccessResponse> {
+    var resp
+    if (!(await this.todoItemExists(todoId))) {
+      resp = {
+        status: 404,
+        message: 'todoId Not Present',
+        results: []
+      }
+    } else {
+      await this.docClient
+        .update({
+          TableName: this.todoTable,
+          Key: {
+            todoId: todoId
+          },
+          UpdateExpression: 'set name = :n, dueDate=:dD, done=:d',
+          ExpressionAttributeValues: {
+            ':n': updatedTodo.name,
+            ':dD': updatedTodo.dueDate,
+            ':d': updatedTodo.done
+          },
+          ReturnValues: 'UPDATED_NEW'
+        })
+        .promise()
+        .then((data) => {
+          resp = {
+            status: 200,
+            message: 'Successfully Updated!',
+            results: [data]
           }
         })
         .catch((err) => {

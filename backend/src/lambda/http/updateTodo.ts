@@ -10,7 +10,9 @@ import { UpdateTodoRequest } from '../../requests/UpdateTodoRequest'
 
 import { createLogger } from '../../utils/logger'
 
-import { createTodo } from '../../businessLogic/Todo'
+import { updateTodo } from '../../businessLogic/Todo'
+
+const logger = createLogger('updatelogger')
 
 export const handler: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent
@@ -18,13 +20,16 @@ export const handler: APIGatewayProxyHandler = async (
   const todoId = event.pathParameters.todoId
   const updatedTodo: UpdateTodoRequest = JSON.parse(event.body)
 
-  const updateItemResp = await 
+  logger.info(`create request for ${JSON.stringify(todoid)} received!!`)
+
+  const updateItemResp = await updateTodo(todoId, updatedTodo)
+
   return {
     statusCode: updateItemResp.status,
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Credentials': true
     },
-    body: JSON.stringify(deleteItemResp.results)
+    body: JSON.stringify(updateItemResp.results)
   }
 }

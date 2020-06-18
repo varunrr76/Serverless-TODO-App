@@ -27,3 +27,7 @@ export async function createTodo(
 export async function deleteTodo(todoId: string) {
   return await todoAccess.deleteTodo(todoId)
 }
+
+export async function updateTodo(todoId: string) {
+  return await todoAccess.updateTodo(todoId)
+}
