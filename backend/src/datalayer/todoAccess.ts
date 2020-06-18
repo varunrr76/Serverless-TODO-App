@@ -133,7 +133,7 @@ export class TodoAccess {
     return resp as DataAccessResponse
   }
 
-  async getTodo(userId: string): Promise<DataAccessResponse> {
+  async getTodos(userId: string): Promise<DataAccessResponse> {
     var resp
     await this.docClient
       .query({
@@ -147,7 +147,7 @@ export class TodoAccess {
       })
       .promise()
       .then((data) => {
-        logger.info('Successfully Created!')
+        logger.info('Successfully Retrieved!')
         resp = {
           status: 201,
           results: data
@@ -155,7 +155,7 @@ export class TodoAccess {
       })
       .catch((err) => {
         logger.error(
-          `Failed to create todo!! Check with DynamoDB connection. \n ${err}`
+          `Failed to get todo!! Check with DynamoDB connection. \n ${err}`
         )
         resp = {
           status: 500,

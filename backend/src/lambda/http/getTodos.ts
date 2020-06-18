@@ -5,22 +5,26 @@ import {
   APIGatewayProxyResult,
   APIGatewayProxyHandler
 } from 'aws-lambda'
+import { createLogger } from '../../utils/logger'
+
+import { getTodos } from '../../businessLogic/Todo'
+
+const logger = createLogger('getTodos')
 
 export const handler: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
-  logger.info(`create request for ${JSON.stringify(newTodo)} received!!`)
-
+  logger.info(`get todos request received for the authenticated user!!`)
   const token: string = event.headers.Authorization.split(' ')[1]
 
-  const getTodoResponse = await getTodo(token)
+  const getTodoResponse = await getTodos(token)
 
   return {
-    statusCode: getItemResponse.status,
+    statusCode: getTodoResponse.status,
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Credentials': true
     },
-    body: JSON.stringify(createItemResponse.results)
+    body: JSON.stringify(getTodoResponse.results)
   }
 }
