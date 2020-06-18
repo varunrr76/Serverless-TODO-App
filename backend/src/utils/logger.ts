@@ -10,7 +10,7 @@ export function createLogger(loggerName: string) {
     level: 'info',
     format: winston.format.combine(
       winston.format.timestamp(),
-      winston.format.json()
+      winston.format.prettyPrint()
     ),
     defaultMeta: { name: loggerName },
     transports: [new winston.transports.Console()]
