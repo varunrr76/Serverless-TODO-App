@@ -2,6 +2,10 @@ import dateFormat from 'dateformat'
 import { History } from 'history'
 import update from 'immutability-helper'
 import * as React from 'react'
+import DatePicker from 'react-datepicker'
+
+import 'react-datepicker/dist/react-datepicker.css'
+
 import {
   Button,
   Checkbox,
@@ -26,18 +30,28 @@ interface TodosProps {
 interface TodosState {
   todos: Todo[]
   newTodoName: string
+  newTodoDueDate: string
   loadingTodos: boolean
+  startdate: Date
 }
 
 export class Todos extends React.PureComponent<TodosProps, TodosState> {
   state: TodosState = {
     todos: [],
     newTodoName: '',
-    loadingTodos: true
+    newTodoDueDate: new Date().toISOString().substring(0, 10),
+    loadingTodos: true,
+    startdate: new Date()
   }
 
   handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ newTodoName: event.target.value })
+  }
+
+  handleDateChange = (date: Date) => {
+    this.setState({ startdate: date })
+    console.log(JSON.stringify(date))
+    this.setState({ newTodoDueDate: JSON.stringify(date) })
   }
 
   onEditButtonClick = (todoId: string) => {
@@ -46,10 +60,9 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
 
   onTodoCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
     try {
-      const dueDate = this.calculateDueDate()
       const newTodo = await createTodo(this.props.auth.getIdToken(), {
         name: this.state.newTodoName,
-        dueDate
+        dueDate: this.state.newTodoDueDate
       })
       this.setState({
         todos: [...this.state.todos, newTodo],
@@ -116,6 +129,13 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
   renderCreateTodoInput() {
     return (
       <Grid.Row>
+        <Grid.Column width={16}>
+          <DatePicker
+            dateFormat="yyyy/MM/dd"
+            selected={this.state.startdate}
+            onChange={this.handleDateChange}
+          />
+        </Grid.Column>
         <Grid.Column width={16}>
           <Input
             action={{

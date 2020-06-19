@@ -30,7 +30,7 @@ export class TodoAccess {
         logger.info('Successfully Created!')
         resp = {
           status: 201,
-          results: [todoItem]
+          results: JSON.stringify(todoItem)
         }
       })
       .catch((err) => {
@@ -39,7 +39,7 @@ export class TodoAccess {
         )
         resp = {
           status: 500,
-          results: []
+          results: 'Error'
         }
       })
     return resp as DataAccessResponse
@@ -51,7 +51,7 @@ export class TodoAccess {
       logger.error('todoId Not Present')
       resp = {
         status: 404,
-        results: []
+        results: 'todoId Not Found'
       }
     } else {
       await this.docClient
@@ -66,7 +66,7 @@ export class TodoAccess {
           logger.info('Successfully Deleted!')
           resp = {
             status: 200,
-            results: [{ todoId: todoId }]
+            results: `Successfully deleted ${todoId}`
           }
         })
         .catch((err) => {
@@ -75,7 +75,7 @@ export class TodoAccess {
           )
           resp = {
             status: 500,
-            results: []
+            results: `Failed to delete todo!! Check with DynamoDB connection. \n ${err}`
           }
         })
     }
@@ -91,7 +91,7 @@ export class TodoAccess {
       logger.error('todoId Not Present')
       resp = {
         status: 404,
-        results: []
+        results: `logger.error('todoId Not Present')`
       }
     } else {
       logger.info(`${JSON.stringify(updatedTodo.name)}`)
@@ -117,7 +117,7 @@ export class TodoAccess {
           logger.info(`Successfully updated to ${JSON.stringify(data)}`)
           resp = {
             status: 200,
-            results: [data]
+            results: JSON.stringify(data)
           }
         })
         .catch((err) => {
@@ -126,7 +126,7 @@ export class TodoAccess {
           )
           resp = {
             status: 500,
-            results: []
+            results: `Failed to update todo!! Check with DynamoDB connection. \n ${err}`
           }
         })
     }
@@ -150,7 +150,7 @@ export class TodoAccess {
         logger.info('Successfully Retrieved!')
         resp = {
           status: 201,
-          results: data
+          results: JSON.stringify(data)
         }
       })
       .catch((err) => {
@@ -159,7 +159,7 @@ export class TodoAccess {
         )
         resp = {
           status: 500,
-          results: []
+          results: `Failed to get todo!! Check with DynamoDB connection. \n ${err}`
         }
       })
     return resp as DataAccessResponse

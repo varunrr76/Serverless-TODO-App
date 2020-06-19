@@ -30,6 +30,6 @@ export const handler: APIGatewayProxyHandler = async (
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Credentials': true
     },
-    body: JSON.stringify(updateItemResp.results)
+    body: updateItemResp.results
   }
 }

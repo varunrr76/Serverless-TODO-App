@@ -25,6 +25,6 @@ export const handler: APIGatewayProxyHandler = async (
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Credentials': true
     },
-    body: JSON.stringify(deleteItemResp.results)
+    body: deleteItemResp.results
   }
 }
