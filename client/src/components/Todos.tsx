@@ -50,8 +50,7 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
 
   handleDateChange = (date: Date) => {
     this.setState({ startdate: date })
-    console.log(JSON.stringify(date))
-    this.setState({ newTodoDueDate: JSON.stringify(date) })
+    this.setState({ newTodoDueDate: date.toISOString().substring(0, 10) })
   }
 
   onEditButtonClick = (todoId: string) => {
@@ -137,6 +136,9 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
           />
         </Grid.Column>
         <Grid.Column width={16}>
+          <Divider />
+        </Grid.Column>
+        <Grid.Column width={16}>
           <Input
             action={{
               color: 'teal',
@@ -177,7 +179,6 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
   }
 
   renderTodosList() {
-    console.log(this.state.todos)
     return (
       <Grid padded>
         {this.state.todos.map((todo, pos) => {

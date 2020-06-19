@@ -32,7 +32,7 @@ export async function createTodo(
       }
     }
   )
-  return response.data.item
+  return response.data
 }
 
 export async function patchTodo(
