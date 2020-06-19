@@ -18,9 +18,9 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-2'}
 
-  # tracing:
-  #   lambda: true
-  #   apiGateway: true
+  tracing:
+    lambda: true
+    apiGateway: true
 
   environment:
     TODO_TABLE: TODO-Varun-${self:provider.stage}
