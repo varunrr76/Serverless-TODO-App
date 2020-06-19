@@ -3,6 +3,7 @@ import { History } from 'history'
 import update from 'immutability-helper'
 import * as React from 'react'
 import DatePicker from 'react-datepicker'
+import moment from 'moment'
 
 import 'react-datepicker/dist/react-datepicker.css'
 
@@ -35,11 +36,15 @@ interface TodosState {
   startdate: Date
 }
 
+// const usaTime = new Date().toLocaleString('en-US', {
+//   timeZone: 'America/New_York'
+// })
+
 export class Todos extends React.PureComponent<TodosProps, TodosState> {
   state: TodosState = {
     todos: [],
     newTodoName: '',
-    newTodoDueDate: new Date().toISOString().substring(0, 10),
+    newTodoDueDate: moment(new Date()).format().substring(0, 10), //new Date().toISOString().substring(0, 10),
     loadingTodos: true,
     startdate: new Date()
   }
@@ -50,7 +55,9 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
 
   handleDateChange = (date: Date) => {
     this.setState({ startdate: date })
-    this.setState({ newTodoDueDate: date.toISOString().substring(0, 10) })
+    console.log(date.toISOString())
+    console.log(date.toISOString().substring(0, 10))
+    this.setState({ newTodoDueDate: moment(date).format().substring(0, 10) })
   }
 
   onEditButtonClick = (todoId: string) => {
